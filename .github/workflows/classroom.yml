@@ -1,0 +1,72 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: sum 5-15
+      id: sum-5-15
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: sum 5-15
+        setup-command: gcc -o sumNumSeries sumNumSeries.c
+        command: "./sumNumSeries"
+        input: '5'
+        expected-output: '15'
+        comparison-method: exact
+        timeout: 10
+        max-score: 5
+    - name: sum 10-55
+      id: sum-10-55
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: sum 10-55
+        setup-command: gcc -o sumNumSeries sumNumSeries.c
+        command: "./sumNumSeries"
+        input: '10'
+        expected-output: '55'
+        comparison-method: exact
+        timeout: 10
+        max-score: 5
+    - name: sum 50-1275
+      id: sum-50-1275
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: sum 50-1275
+        setup-command: gcc -o sumNumSeries sumNumSeries.c
+        command: "./sumNumSeries"
+        input: '50'
+        expected-output: '1275'
+        comparison-method: exact
+        timeout: 10
+        max-score: 5
+    - name: sum 55-1540
+      id: sum-55-1540
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: sum 55-1540
+        setup-command: gcc -o sumNumSeries sumNumSeries.c
+        command: "./sumNumSeries"
+        input: '55'
+        expected-output: '1540'
+        comparison-method: exact
+        timeout: 10
+        max-score: 5
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        SUM-5-15_RESULTS: "${{steps.sum-5-15.outputs.result}}"
+        SUM-10-55_RESULTS: "${{steps.sum-10-55.outputs.result}}"
+        SUM-50-1275_RESULTS: "${{steps.sum-50-1275.outputs.result}}"
+        SUM-55-1540_RESULTS: "${{steps.sum-55-1540.outputs.result}}"
+      with:
+        runners: sum-5-15,sum-10-55,sum-50-1275,sum-55-1540
